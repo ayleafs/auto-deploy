@@ -2,7 +2,7 @@ const childProcess = require('child_process');
 const { getConfig } = require('../global');
 const { Files } = require('../utils/files');
 
-const { uuid } = require('uuidv4');
+const { v4 } = require('uuid');
 
 
 class Process {
@@ -20,7 +20,7 @@ class Process {
     this.cmd = command;
     this.github = url;
 
-    this.uuid = uuid();
+    this.uuid = v4();
     this.dir  = Files.cwdPath(Process.path, this.uuid);
   }
 
@@ -42,9 +42,9 @@ class Process {
 
     // wait till the process is spawned to read from stdout
     this.spawned.on('spawn', () => {
-      this.spawned.stdout.on('data', data => {
-        console.log({ data, hey: 'hey' });
-      });
+      console.log(`process started in ${this.uuid}`);
+
+      // this.spawned.stdout.on('data', console.log);
     });
 
     this.spawned.on('error', console.error);
