@@ -23,6 +23,14 @@ class Process {
 
     this.uuid = v4();
     this.dir  = Files.cwdPath(Process.path, this.uuid);
+
+    this.exitCallback = () => {
+      if (!getConfig().content.restart_on_crash) {
+        return;
+      }
+
+      this.start();
+    };
   }
 
   start() {
