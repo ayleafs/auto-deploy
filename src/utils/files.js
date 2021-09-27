@@ -4,6 +4,18 @@ const fs   = require('fs');
 class Files {
   static path = 'files';
 
+  static baseName(fullPath) {
+    return fullPath ? path.basename(fullPath) : '';
+  }
+
+  static rmdir(dir) {
+    if (!fs.existsSync(dir)) {
+      return;
+    }
+
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+
   static mkdirs(dir) {
     if (fs.existsSync(dir)) {
       return;
