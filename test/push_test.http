@@ -1,0 +1,7 @@
+POST http://localhost:4200/push
+Content-Type: application/json
+x-hub-signature-256: sha256=53aaff720915b6dd4b3b8b2589a6f83407df771462dd6f3f48079f04ef2341e7
+
+{
+  "ref": "refs/head/production"
+}
