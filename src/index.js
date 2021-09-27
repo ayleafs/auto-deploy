@@ -5,6 +5,8 @@ const bodyParser = require('body-parser');
 const { Process } = require('./processes');
 const { getConfig } = require('./global');
 
+const { Files } = require('./utils/files');
+
 const app = express();
 
 // for json bodies
@@ -31,14 +33,27 @@ app.post('/push', (req, res) => {
   }
 
   res.sendStatus(200);
-  Process.replaceActive();
+
+  // reference usually formatted as refs/heads/<branch>
+  let { ref } = req.body;
+  let repoName = Files.baseName(ref);
+
+  const { repo } = getConfig().content.github;
+
+  // ignore any commits to branches we don't want
+  if (repoName !== repo.pull_from) {
+    return;
+  }
+
+  // a new commit was received so pay attention to it
+  Process.replaceActive(new Process(repoName.start, repoName.url, repoName.pull_from));
 });
 
 app.listen(getConfig().content.port, () => {
   console.log(`Listening now on port ${getConfig().content.port}`);
 
   const { repo } = getConfig().content.github;
-  Process.replaceActive(new Process(repo.start, repo.url)); // start the default task
+  Process.replaceActive(new Process(repo.start, repo.url, repo.pull_from)); // start the default task
 });
 
 module.exports = { app };
