@@ -51,7 +51,7 @@ class Process {
       this.spawned.on('spawn', () => {
         console.log(`process started in ${this.uuid}`);
 
-        this.spawned.stdout.on('data', console.log);
+        // this.spawned.stdout.on('data', console.log);
         if (overlap) resolve();
       });
 
